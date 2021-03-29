@@ -70,7 +70,7 @@ describe('[3] Testing Http', () => {
       // note: the flush and the optional response object in 3.4.1 of TestBed example are not needed with spectator
     });
 
-    // TODO: how do we test multiple requests with spectator?
+    // TODO: @brian how do we test multiple requests with spectator?
     // fails with:  Expected one matching request for criteria "Match method: GET, URL: api/heroes", found 3 requests
     it.skip('(3.5) cover the Multiple Request Case, and check the request length', () => {
 
