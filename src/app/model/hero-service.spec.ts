@@ -9,7 +9,7 @@ import { HeroService } from './hero.service';
 // prep hardcoded data, initiate the client request and setup the assertion that will happen, match the url w/ expectOne- for spectator add a 2nd arg HttpMethod.GET/POST etc. (3.2)
 // with spectator, afterEach verify() is not needed, flush is also not needed (3.3)  flush is only needed for concurrent get requests https://www.npmjs.com/package/@ngneat/spectator#testing-services
 // in error testing, define the error response and bypass the success case (3.4)
-// testing save requests PUTs and POSTs and DELETEs: test the method type and request body that is going out from the client ' (3.6)
+// testing save requests PUTs and POSTs and DELETEs: test the method type and for PUT and POST request body that is going out from the client ' (3.6)
 
 describe('[3] Testing Http', () => {
   // setup is much cleaner with spectator(3.1)
