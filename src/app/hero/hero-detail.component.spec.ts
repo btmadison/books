@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { fakeAsync, tick } from '@angular/core/testing';
+import { TitleCasePipe } from 'src/app/shared/title-case.pipe';
 
 
 
@@ -36,7 +37,6 @@ describe('module test', () => {
   // (4.1) setup the component with routing. Use createRoutingFactory to auto-stub Router and ActivatedRoute
   const createComponent = createRoutingFactory({ // compared to createComponentFactory, Route and ActivatedRoute are auto-mocked
     component: HeroDetailComponent,
-    // componentMocks: [HeroDetailService], // if we use automocking, we have to set the hero property before every test so that it comes in as defined for the @Input to be available:  component.hero = { id: 2, name: 'Dork' };
     // instead of automocking and overriding hero in the tests, this is short form of providing a specific function inline, the rest are automocked and can be overridden in the individual tests
     providers: [MockProvider(HeroDetailService, {  // (4.2) mock the ngOnInit service observable call or set the @Input manually in each test,
       getHero: () => of({ id: 69, name: 'Murat the Super Tester' })
@@ -44,6 +44,7 @@ describe('module test', () => {
     })],
     imports: [FormsModule], // need formsModule for the template ngmodel
     detectChanges: false,
+    declarations: [TitleCasePipe]
   });
 
   beforeEach(() => {
@@ -56,6 +57,7 @@ describe('module test', () => {
     // when the component has @Input(s), in the tests you need to set the initial input, or emit a hero on your subscription with fakeasync or async await, or your dom will never render
     spectator.detectChanges();
     expect(component).toBeTruthy();
+    expect(spectator.fixture).toMatchSnapshot();
   });
 
   // (4.3) use fakeAsync or fixture.whenStable() to access the dom
@@ -65,6 +67,7 @@ describe('module test', () => {
 
     // IMPORTANT: // after the fixture.whenStable(), the mock service call for getHero will get called, so you can verify the dom has changed to new hero
     await spectator.fixture.whenStable();
+    expect(spectator.fixture).toMatchSnapshot();
 
     spectator.click('.qa-cancel');
     expect(spectator.inject(Router).navigate).toHaveBeenCalled();
@@ -106,7 +109,6 @@ describe('module test', () => {
     expect(spectator.inject(Router).navigate).toHaveBeenCalled();
   }));
 
-
   // while debugging, the component comes with nothing for interpolation {{ }} , don't know why... This is why the assertions are not working here. BUT, the pattern of approach should work with proper components
   it('query byText', fakeAsync(() => {
     // this is the point of doing detectchanges false initially and calling detect changes manually instead of in before each - i can set any inputs specific to each test scenario before detecting the changes
@@ -115,6 +117,8 @@ describe('module test', () => {
 
     spectator.detectChanges();
     tick();
+
+    expect(spectator.fixture).toMatchSnapshot();
 
     // expect(spectator.query('.qa-hero-name').innerHTML).toContain('Dork');
     // expect(spectator.query(byTextContent('Dork', {selector: '.qa-hero-name'}))).toBeTruthy();
